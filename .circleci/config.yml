@@ -5,14 +5,14 @@
 version: 2
 jobs:
   build:
-	branches:
-		only:
-			- source 
-			- source-test
+    branches:
+      only:
+        - source
+        - source-test
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
-      
+
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -31,23 +31,20 @@ jobs:
           - v1-dependencies-
 
       - run:
-			name: Install Dependencies
-			command: |
-				npm install hexo-cli -g
-				npm install hexo --save
-				npm install hexo-deployer-git --save
-				npm install
+          name: Install Dependencies
+          command: |
+            npm install hexo-cli -g
+            npm install hexo --save
+            npm install hexo-deployer-git --save
+            npm install
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-        
+
       # run tests!
       - run:
-			name: Generate and publish the blog
-			command: | 
-				echo "placeholder"
-
-
-
+          name: Generate and publish the blog
+          command: |
+            echo "placeholder"
