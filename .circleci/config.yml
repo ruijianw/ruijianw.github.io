@@ -54,6 +54,8 @@ jobs:
       - run:
           name: Generate and publish the blog
           command: |
-            hexo clean
+            #hexo clean
             hexo g
+            # this line is to avoid overwriting git commit history
+            git clone --depth 1 --branch=master https://github.com/ruijianw/ruijianw.github.io.git .deploy_git
             hexo d
