@@ -94,11 +94,11 @@ $$
 $$
 \textrm{Python3}=\begin{cases}
            \textrm{str} \rightarrow \textrm{human text}\\
-           \textrm{unicode} \rightarrow \textrm{raw bytes}
+           \textrm{bytes} \rightarrow \textrm{raw bytes}
         \end{cases}
 $$
 
-### Problem Solving
+### Solve the code snippet issue
 Let's answer why the very first code snippet only works in Python3, and how to write the Python2 code.
 * Analysis
 In Python2, when you define a string with `r''` or `single quote` or `double quotes` or `triple quotes`, it means `str` in Python2, which is the machine text, binary data, whereas in Python3, a string defined  with `r''` or `single quote` or `double quotes` or `triple quotes` also means `str` in Python3, but it is HUMAN TEXT, so you can encode it.
