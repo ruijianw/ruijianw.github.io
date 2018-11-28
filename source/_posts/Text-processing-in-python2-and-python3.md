@@ -1,6 +1,7 @@
 ---
 title: Text processing in python2 and python3
 date: 2018-10-31 15:41:58
+updated: 2018-11-01 23:00:00
 tags:
 mathjax: true
 ---
