@@ -360,29 +360,18 @@
 
       
         
-          
-            <p>I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon.</p>
+          <p>I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon.</p>
 <p>Main takeaways, six challenges when doing machine learning infrastructure and some pointers to existed papers/blogs about ML infrastructures.</p>
-<h1 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h1><h2 id="1-Rely-on-data-standards"><a href="#1-Rely-on-data-standards" class="headerlink" title="1. Rely on data standards"></a>1. Rely on data standards</h2><p>The data standards here means, there should be a universal data structure to hold machine learning data(e.g. categorical/numerical/ features). One good example is Tensorflow’s <a href="https://www.tensorflow.org/tutorials/load_data/tf-records" target="_blank" rel="noopener"><code>tf.example</code></a>.</p>
-<p>One big benefit from data standards is to allow data flow from components to components easily. In a machine learning system, after collecting the data, the first step usually is data preprocessing(Spotify has a open source implementation called <a href="https://github.com/spotify/featran" target="_blank" rel="noopener">featran</a>). After that we can use different machine learning algorithms. With data standards, we can easily drop a new component in the pipeline without many code changes.</p>
-<h2 id="2-Share-logic-amp-weights"><a href="#2-Share-logic-amp-weights" class="headerlink" title="2. Share logic &amp; weights"></a>2. Share logic &amp; weights</h2><p>The weights here means two parts:</p>
-<p><script type="math/tex">\theta_{feature\ processing}</script> means the parameters ironed in feature transformation component, for example we need to record the average value of certain column to do the standarization $X’ = \frac{X-\mu}{\delta}$<br>$\theta_{model}$ means the parameters learned in a machine learning model, like weights and bias in a logistic regression.</p>
-<p>The major takeaway is, we should seal feature processing step and model prediction in the same container, so that we won’t have wrong wires in components.</p>
-<p>That actually triggered my memory regarding a production error we made, we accidentally merged a PR that replaced the tokenizer and we didn’t record the tokenizer version in model, that causes a lot of complaints from our customer. After that accident, we started to add one more entry in the model config file, to remember the tokenizer version.</p>
-<p>Since the presentation mainly talked about structured data, it is a little bit different from unstructured data such as text, NLP depends on other primitive NLP models to extract features(tokenization, entities, POS, syntax, etc.), that will lead you to a dependcy hell.</p>
-<p>And one more difference I am thinking between ML infrasturce presented tonight and in our daily jobs. The data for Spotify’s machine learning models usually are expected(recommending music, display ads), while what we are doing is Machine Learning as a Service, the challenge comes from the diversity of the data. The data can be from any domains and you have to use one single algorithm to fit them otherwise it would be hard to scale out your service.</p>
-<h2 id="3-Share-decoration-logic"><a href="#3-Share-decoration-logic" class="headerlink" title="3. Share decoration logic"></a>3. Share decoration logic</h2><p>This is inspired by Google’s blog, see <a href="#Pointers">Pointers</a> 1<br>After a model is online, we continue to collect more and more data. </p>
-<p>In the meanwhile, we need to get data from different data pool and join/compose them together before sending them to a machine learning system(include feature processing and model prediction). And we also want to retrain the model once we get more and more data, a good trick is log the decorated/joined data in runtime in a database, once we need to retrain the model, we don’t need to redo the join/compose step again.</p>
-<h2 id="4-Validate-your-data"><a href="#4-Validate-your-data" class="headerlink" title="4. Validate your data"></a>4. Validate your data</h2><p>When buliding the machine learning model, we used to make some assumptions(e.g. age cannot be negative), this is easy to gurantee in training step, but we need to guard the input when serving the model, propably trigger some alerts when too many outliers are detected.</p>
-<p>Some off-the-shelf implemention is Tensorflow’s <a href="https://www.tensorflow.org/tfx/data_validation/get_started" target="_blank" rel="noopener"><code>TFDV</code></a>, which <code>compute the statistics</code>, <code>infer a schema</code>, <code>detect data anomalies</code> for given dataset.</p>
-<p>By validating your newly collected data against historical/training data, you can also catch the data shifting.</p>
-<h2 id="5-Use-“stateless”-containers"><a href="#5-Use-“stateless”-containers" class="headerlink" title="5. Use “stateless” containers"></a>5. Use “stateless” containers</h2><p>It is hard to have completely “stateless” containers. By making it as “stateless” as possible, on-call engineers can easily revert the machine learning model to previous version once some bugs happened in current version. Another benefits is make the new model deployment easier.</p>
-<p>Don’t include any customized logic inside the container, it would significantly decrease the maintainability.</p>
-<h2 id="6-Leverage-CI-CD-for-ML"><a href="#6-Leverage-CI-CD-for-ML" class="headerlink" title="6. Leverage CI/CD for ML"></a>6. Leverage CI/CD for ML</h2><p>CI/CD drastically change the way that software development. Other than the traditional benefits, CI/CD in machine leanring systems is more complex, some takeaways:<br> a. Use it a lot, both offline and online<br> b. Use low user impact environment</p>
-<p>There is also an interesting way in Spotify to test machine learning model, they called it <code>Shadow</code>. Let’s say we have model A in prodcution and model B is a newer version and ready to deploy.</p>
-<p>After deploy model B and before route all traffic to B, mirror all traffic that to A, and send them to B. User will only receive predctions from model A, while the engineers should monitor the status of model B, it is more like a load testing in machine learning world.</p>
-<h1 id="Pointers"><a href="#Pointers" class="headerlink" title="Pointers:"></a>Pointers:</h1><h3 id="1-Hidden-Technical-Debt-in-Machine-Learning-Systems"><a href="#1-Hidden-Technical-Debt-in-Machine-Learning-Systems" class="headerlink" title="1. Hidden Technical Debt in Machine Learning Systems"></a>1. <a href="https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf" target="_blank" rel="noopener">Hidden Technical Debt in Machine Learning Systems</a></h3><h3 id="2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering"><a href="#2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering" class="headerlink" title="2. Rules of Machine Learning: Best Practices for ML Engineering"></a>2. <a href="https://developers.google.com/machine-learning/guides/rules-of-ml/" target="_blank" rel="noopener">Rules of Machine Learning: Best Practices for ML Engineering</a></h3><h3 id="3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems"><a href="#3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems" class="headerlink" title="3. What’s your ML test score? A rubric for ML production systems"></a>3. <a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45742.pdf" target="_blank" rel="noopener">What’s your ML test score? A rubric for ML production systems</a></h3>
+<h1 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h1><h2 id="1-Rely-on-data-standards"><a href="#1-Rely-on-data-standards" class="headerlink" title="1. Rely on data standards"></a>1. Rely on data standards</h2>
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2018-12-07-tech-talk-ml-infra-spotify/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
         
       
     </div>
@@ -515,15 +504,20 @@
 
       
         
+          <ol>
+<li>[2018-11-26]Uber ride in a raining day<br>I was taking an Uber from Broadway to Grand Central, then I noticed the driver was frustrating about a new dispatch. The passengers were were standing in the middle of the trip. We saw those passengers in the middle of the trip too! But the driver could not pick them up since I called an UberX instead of Uber Pool. That means the driver had to drive back to the passengers after dropping me off and the passengers had to wait in the cold rain for ~13 minutes.
+          <!--noindex-->
           
-            <ol>
-<li>[2018-11-26]Uber ride in a raining day<br>I was taking an Uber from Broadway to Grand Central, then I noticed the driver was frustrating about a new dispatch. The passengers were were standing in the middle of the trip. We saw those passengers in the middle of the trip too! But the driver could not pick them up since I called an UberX instead of Uber Pool. That means the driver had to drive back to the passengers after dropping me off and the passengers had to wait in the cold rain for ~13 minutes.<br>Right after we passed the passengers from next dispatch, I told the driver to let them in the car, so they would not stand in the rain and the driver needn’t to drive back to pick them up.<br>It turned out they are three visitors from Virginia to NYC to celebrate Christmas and a grandma of them came here to see her grandson. We had a pleasant conversation in the car and they thanked me a lot.<br>A small and quick idea makes two groups of people happy, this really made my day!<br>On my way back, I was thinking why would Uber dispatch system do such stupid assignment even after the driver declined it once. I am assuming one (over)important metric during their algorithm development is batch size of the request, they want to batch the as many requests as possible so that the driver won’t be idle. Maybe there are some other metrics they should consider.</li>
-</ol>
-
-          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018-11-28-little-things-that-made-my-day/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
         
       
-    </div>
+    </li></ol></div>
 
     
 
@@ -669,70 +663,18 @@
 
       
         
-          
-            <p>One big difference between python2 and python3 is about strings. I have been bitten by this serval times. The motivation of this blog is clearify some basic questions.</p>
+          <p>One big difference between python2 and python3 is about strings. I have been bitten by this serval times. The motivation of this blog is clearify some basic questions.</p>
 <h3 id="Code-Point"><a href="#Code-Point" class="headerlink" title="Code Point"></a>Code Point</h3><p>We all know computers can only understand 0s and 1s, to represent a character or a string, we need such kind binary representation, a well-known code is<br><a href="https://www.cs.cmu.edu/~pattis/15-1XX/common/handouts/ascii.html" target="_blank" rel="noopener"><code>ASCII</code></a>, for example:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = 01100001</span><br><span class="line">b = 01100010</span><br><span class="line">c = 01100011</span><br></pre></td></tr></table></figure>
-<p>The problem with <code>ASCII</code>‘s 8 digit is that there are only 256 combinations, of course there are some other encodings, but that is beyond this blog.</p>
-<p>In a nutshell, a code point is an integer, represents a character.</p>
-<h3 id="Unicode-code-point"><a href="#Unicode-code-point" class="headerlink" title="Unicode code point"></a>Unicode code point</h3><p>The difference between <code>Code Point</code> and <code>Unicode code point</code> is, Unicode code points are usually noted as hexadecimal with a <code>U+</code> in the very begining, it is the convention. Then the <code>Unicode code point</code> for letter a, b and c are:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a = U+0061</span><br><span class="line">b = U+0062</span><br><span class="line">c = U+0063</span><br></pre></td></tr></table></figure>
-<h3 id="Text-vs-Bytes"><a href="#Text-vs-Bytes" class="headerlink" title="Text vs Bytes"></a>Text vs Bytes</h3><p>When talking about the strings, we usually mean the text you see on the screen as this blog, let’s call it <code>human text</code>, and the way a machine can understand is binary data, so <code>bytes</code>/<code>str</code> is employed in Python3/Python2 to represent the <code>machine text</code>, <code>binary data</code>.</p>
-<p>Following is an example of the text <code>café</code></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Python3 version</span></span><br><span class="line">s = <span class="string">'café'</span></span><br><span class="line">print(s)</span><br><span class="line"><span class="comment">#café</span></span><br><span class="line">encoded_cafe = s.encode(<span class="string">"utf8"</span>)</span><br><span class="line">print(encoded_cafe)</span><br><span class="line"><span class="comment">#b'caf\xc3\xa9'</span></span><br><span class="line">decoded_cafe = encoded_cafe.decode(<span class="string">"utf8"</span>)</span><br><span class="line">print(decoded_cafe)</span><br><span class="line"><span class="comment">#café</span></span><br></pre></td></tr></table></figure>
-<p>If you copy the code above in Python2, you will see:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">'café'</span></span><br><span class="line">print(s)</span><br><span class="line"><span class="comment">#café</span></span><br><span class="line">encoded_cafe = s.encode(<span class="string">"utf8"</span>)</span><br><span class="line"><span class="comment">#Traceback (most recent call last):</span></span><br><span class="line"><span class="comment">#  File "&lt;stdin&gt;", line 2, in &lt;module&gt;</span></span><br><span class="line"><span class="comment">#UnicodeDecodeError: 'ascii' codec can't decode byte 0xc3 in position 3: ordinal not in range(128)</span></span><br></pre></td></tr></table></figure>
-<p> We will dive into this error later and find a solution for it.</p>
-<h3 id="Encode-vs-Decode"><a href="#Encode-vs-Decode" class="headerlink" title="Encode vs Decode"></a>Encode vs Decode</h3><p>I was confused about the encode and decode step until I find a good analogy of it. </p>
-<ol>
-<li>Encode / Encrypt<br>Consider the encode step is a encryption, we are translate a <code>human text</code> to <code>machine text</code> or <code>bytes</code>, which can be only understood by machines, that is <code>café</code> -&gt; <code>caf\xc3\xa9</code>, the first three characters are still represnted by themselves for convenience, but the <code>é</code> is reprensted as two bytes.<br>Without knowing the encoding method, <code>caf\xc3\xa9</code> can be interpreted as a different string:</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">b'caf\xc3\xa9'</span>.decode(<span class="string">"gb2312"</span>)</span><br><span class="line"><span class="comment">#'caf茅'</span></span><br><span class="line"><span class="string">b'caf\xc3\xa9'</span>.decode(<span class="string">"latin1"</span>)</span><br><span class="line"><span class="comment">#'cafÃ©'</span></span><br></pre></td></tr></table></figure>
-<p>The code above explains the analogy between <code>encode</code> and <code>encrypt</code>.</p>
-<ol>
-<li>Decdoe / Decrypt<br>Given the the context of encode, we should naturally think about the analogy between <code>decode</code> and <code>decrypt</code>. To correctly “decrypt” the <code>bytes</code>, we need to know the encoding charset. </li>
-</ol>
-<h3 id="str-vs-unicode-vs-bytes-vs-bytearray"><a href="#str-vs-unicode-vs-bytes-vs-bytearray" class="headerlink" title="str vs unicode vs bytes vs bytearray"></a>str vs unicode vs bytes vs bytearray</h3><p>After talking about the encode and decode, let’s take a look about the types for strings.<br>There are two built-in types in both Python2 and Python3:</p>
-<script type="math/tex; mode=display">
-\textrm{Python2}=\begin{cases}
-           \textrm{str} \rightarrow \textrm{raw bytes}\\
-           \textrm{unicode} \rightarrow \textrm{human text}
-        \end{cases}</script><script type="math/tex; mode=display">
-\textrm{Python3}=\begin{cases}
-           \textrm{str} \rightarrow \textrm{human text}\\
-           \textrm{bytes} \rightarrow \textrm{raw bytes}
-        \end{cases}</script><h3 id="Solve-the-code-snippet-issue"><a href="#Solve-the-code-snippet-issue" class="headerlink" title="Solve the code snippet issue"></a>Solve the code snippet issue</h3><p>Let’s answer why the very first code snippet only works in Python3, and how to write the Python2 code.</p>
-<ul>
-<li>Analysis<br>In Python2, when you define a string with <code>r&#39;&#39;</code> or <code>single quote</code> or <code>double quotes</code> or <code>triple quotes</code>, it means <code>str</code> in Python2, which is the machine text, binary data, whereas in Python3, a string defined  with <code>r&#39;&#39;</code> or <code>single quote</code> or <code>double quotes</code> or <code>triple quotes</code> also means <code>str</code> in Python3, but it is HUMAN TEXT, so you can encode it.</li>
-<li>Solution<br>Add <code>from __future__ import unicode_literals</code>, this will make variable <code>s</code> a <code>unicode</code> in Python2 when you creating it, which is equivalent to <code>str</code> in Python3. Refer <a href="https://python-future.org/unicode_literals.html" target="_blank" rel="noopener">this link about the pros and cons of this statement</a></li>
-</ul>
-<p>We will save the <code>bytes</code> and <code>bytesarray</code> in the Compatibility section</p>
-<h3 id="Compatbility"><a href="#Compatbility" class="headerlink" title="Compatbility"></a>Compatbility</h3><ol>
-<li>bytes in Python2<br>In python2, <code>bytes</code> is just an alias for <code>str</code>, you can simply check the <a href="https://github.com/python/cpython/blob/2.7/Python/bltinmodule.c#L2725" target="_blank" rel="noopener">source code</a> here and <a href="https://github.com/python/cpython/blob/2.7/Python/bltinmodule.c#L2755" target="_blank" rel="noopener">source_code</a> here, or search <code>&amp;PyString_Type</code> to confirm it.</li>
-<li>bytearray in Python2<br>The <code>bytearray</code> was imported to python2 after people make <code>bytes</code> immutable(<a href="https://www.python.org/dev/peps/pep-3137/" target="_blank" rel="noopener">PEP3137</a>), it is just an array of bytes, the only caveat is:<ul>
-<li>The slice of <code>bytearray</code> is still <code>bytearray</code></li>
-<li>The indexing of <code>bytearray</code> is integer</li>
-<li>All python array’s indexing except bytearray will return the type of element itself.</li>
-</ul>
-</li>
-<li>use <code>from __future__ import unicode_literals</code> in python2 code, <a href="https://python-future.org/unicode_literals.html" target="_blank" rel="noopener">pros and cons</a>, so that you will get <code>unicode</code> type in Python2 when you create strings.</li>
-</ol>
-<h3 id="best-practice"><a href="#best-practice" class="headerlink" title="best practice"></a>best practice</h3><ol>
-<li>use <code>from __future__ import unicode_literals</code> wisely, <a href="https://python-future.org/unicode_literals.html" target="_blank" rel="noopener">pros and cons</a></li>
-<li>always specify encoding, and “utf8” is strongly recommended.</li>
-<li>when reading text, always decode it to <code>human text</code>, then do whatever processing you like, and translate it to <code>bytes</code> to persist the data.</li>
-</ol>
-<h3 id="bonus-knowledge"><a href="#bonus-knowledge" class="headerlink" title="bonus knowledge"></a>bonus knowledge</h3><ol>
-<li>if you are given a sequence of bytes without the encoding, you can <code>guess</code> the encoding with <a href="https://pypi.org/project/chardet/" target="_blank" rel="noopener"><code>chardet</code></a></li>
-</ol>
-<h3 id="References"><a href="#References" class="headerlink" title="References:"></a>References:</h3><ol>
-<li><a href="https://pythonhosted.org/kitchen/unicode-frustrations.html" target="_blank" rel="noopener">https://pythonhosted.org/kitchen/unicode-frustrations.html</a></li>
-<li><a href="https://docs.python.org/3/howto/unicode.html" target="_blank" rel="noopener">https://docs.python.org/3/howto/unicode.html</a></li>
-<li><a href="https://docs.python.org/2/howto/unicode.html" target="_blank" rel="noopener">https://docs.python.org/2/howto/unicode.html</a></li>
-<li><a href="https://www.pythonsheets.com/notes/python-unicode.html" target="_blank" rel="noopener">https://www.pythonsheets.com/notes/python-unicode.html</a></li>
-</ol>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2018-10-31-Text-processing-in-python2-and-python3/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
         
       
     </div>
