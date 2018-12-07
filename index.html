@@ -279,6 +279,161 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018-12-07-tech-talk-ml-infra-spotify/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ruijian Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruijian's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018-12-07-tech-talk-ml-infra-spotify/" itemprop="url">
+                  Tech talk notes-ML Infra @ Spotify
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-12-06 23:17:49" itemprop="dateCreated datePublished" datetime="2018-12-06T23:17:49-05:00">2018-12-06</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon.</p>
+<p>Main takeaways, six challenges when doing machine learning infrastructure and some pointers to existed papers/blogs about ML infrastructures.</p>
+<h1 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h1><h2 id="1-Rely-on-data-standards"><a href="#1-Rely-on-data-standards" class="headerlink" title="1. Rely on data standards"></a>1. Rely on data standards</h2><p>The data standards here means, there should be a universal data structure to hold machine learning data(e.g. categorical/numerical/ features). One good example is Tensorflow’s <a href="https://www.tensorflow.org/tutorials/load_data/tf-records" target="_blank" rel="noopener"><code>tf.example</code></a>.</p>
+<p>One big benefit from data standards is to allow data flow from components to components easily. In a machine learning system, after collecting the data, the first step usually is data preprocessing(Spotify has a open source implementation called <a href="https://github.com/spotify/featran" target="_blank" rel="noopener">featran</a>). After that we can use different machine learning algorithms. With data standards, we can easily drop a new component in the pipeline without many code changes.</p>
+<h2 id="2-Share-logic-amp-weights"><a href="#2-Share-logic-amp-weights" class="headerlink" title="2. Share logic &amp; weights"></a>2. Share logic &amp; weights</h2><p>The weights here means two parts:</p>
+<p><script type="math/tex">\theta_{feature\ processing}</script> means the parameters ironed in feature transformation component, for example we need to record the average value of certain column to do the standarization $X’ = \frac{X-\mu}{\delta}$<br>$\theta_{model}$ means the parameters learned in a machine learning model, like weights and bias in a logistic regression.</p>
+<p>The major takeaway is, we should seal feature processing step and model prediction in the same container, so that we won’t have wrong wires in components.</p>
+<p>That actually triggered my memory regarding a production error we made, we accidentally merged a PR that replaced the tokenizer and we didn’t record the tokenizer version in model, that causes a lot of complaints from our customer. After that accident, we started to add one more entry in the model config file, to remember the tokenizer version.</p>
+<p>Since the presentation mainly talked about structured data, it is a little bit different from unstructured data such as text, NLP depends on other primitive NLP models to extract features(tokenization, entities, POS, syntax, etc.), that will lead you to a dependcy hell.</p>
+<p>And one more difference I am thinking between ML infrasturce presented tonight and in our daily jobs. The data for Spotify’s machine learning models usually are expected(recommending music, display ads), while what we are doing is Machine Learning as a Service, the challenge comes from the diversity of the data. The data can be from any domains and you have to use one single algorithm to fit them otherwise it would be hard to scale out your service.</p>
+<h2 id="3-Share-decoration-logic"><a href="#3-Share-decoration-logic" class="headerlink" title="3. Share decoration logic"></a>3. Share decoration logic</h2><p>This is inspired by Google’s blog, see <a href="#Pointers">Pointers</a> 1<br>After a model is online, we continue to collect more and more data. </p>
+<p>In the meanwhile, we need to get data from different data pool and join/compose them together before sending them to a machine learning system(include feature processing and model prediction). And we also want to retrain the model once we get more and more data, a good trick is log the decorated/joined data in runtime in a database, once we need to retrain the model, we don’t need to redo the join/compose step again.</p>
+<h2 id="4-Validate-your-data"><a href="#4-Validate-your-data" class="headerlink" title="4. Validate your data"></a>4. Validate your data</h2><p>When buliding the machine learning model, we used to make some assumptions(e.g. age cannot be negative), this is easy to gurantee in training step, but we need to guard the input when serving the model, propably trigger some alerts when too many outliers are detected.</p>
+<p>Some off-the-shelf implemention is Tensorflow’s <a href="https://www.tensorflow.org/tfx/data_validation/get_started" target="_blank" rel="noopener"><code>TFDV</code></a>, which <code>compute the statistics</code>, <code>infer a schema</code>, <code>detect data anomalies</code> for given dataset.</p>
+<p>By validating your newly collected data against historical/training data, you can also catch the data shifting.</p>
+<h2 id="5-Use-“stateless”-containers"><a href="#5-Use-“stateless”-containers" class="headerlink" title="5. Use “stateless” containers"></a>5. Use “stateless” containers</h2><p>It is hard to have completely “stateless” containers. By making it as “stateless” as possible, on-call engineers can easily revert the machine learning model to previous version once some bugs happened in current version. Another benefits is make the new model deployment easier.</p>
+<p>Don’t include any customized logic inside the container, it would significantly decrease the maintainability.</p>
+<h2 id="6-Leverage-CI-CD-for-ML"><a href="#6-Leverage-CI-CD-for-ML" class="headerlink" title="6. Leverage CI/CD for ML"></a>6. Leverage CI/CD for ML</h2><p>CI/CD drastically change the way that software development. Other than the traditional benefits, CI/CD in machine leanring systems is more complex, some takeaways:<br> a. Use it a lot, both offline and online<br> b. Use low user impact environment</p>
+<p>There is also an interesting way in Spotify to test machine learning model, they called it <code>Shadow</code>. Let’s say we have model A in prodcution and model B is a newer version and ready to deploy.</p>
+<p>After deploy model B and before route all traffic to B, mirror all traffic that to A, and send them to B. User will only receive predctions from model A, while the engineers should monitor the status of model B, it is more like a load testing in machine learning world.</p>
+<h1 id="Pointers"><a href="#Pointers" class="headerlink" title="Pointers:"></a>Pointers:</h1><h3 id="1-Hidden-Technical-Debt-in-Machine-Learning-Systems"><a href="#1-Hidden-Technical-Debt-in-Machine-Learning-Systems" class="headerlink" title="1. Hidden Technical Debt in Machine Learning Systems"></a>1. <a href="https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf" target="_blank" rel="noopener">Hidden Technical Debt in Machine Learning Systems</a></h3><h3 id="2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering"><a href="#2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering" class="headerlink" title="2. Rules of Machine Learning: Best Practices for ML Engineering"></a>2. <a href="https://developers.google.com/machine-learning/guides/rules-of-ml/" target="_blank" rel="noopener">Rules of Machine Learning: Best Practices for ML Engineering</a></h3><h3 id="3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems"><a href="#3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems" class="headerlink" title="3. What’s your ML test score? A rubric for ML production systems"></a>3. <a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45742.pdf" target="_blank" rel="noopener">What’s your ML test score? A rubric for ML production systems</a></h3>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018-11-28-little-things-that-made-my-day/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -657,7 +812,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-count">3</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -861,9 +1016,11 @@
   
     
       
+        
+      
     
       
-        
+    
       
     
   

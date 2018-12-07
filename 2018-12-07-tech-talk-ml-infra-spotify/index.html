@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.5.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon. Main takeaways, six challenges">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tech talk notes-ML Infra @ Spotify">
+<meta property="og:url" content="http://yoursite.com/2018-12-07-tech-talk-ml-infra-spotify/index.html">
+<meta property="og:site_name" content="Ruijian&#39;s Blog">
+<meta property="og:description" content="I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon. Main takeaways, six challenges">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-12-07T04:17:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tech talk notes-ML Infra @ Spotify">
+<meta name="twitter:description" content="I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon. Main takeaways, six challenges">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018-12-07-tech-talk-ml-infra-spotify/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Tech talk notes-ML Infra @ Spotify | Ruijian's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ruijian's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018-12-07-tech-talk-ml-infra-spotify/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Ruijian Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ruijian's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Tech talk notes-ML Infra @ Spotify
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-12-06 23:17:49" itemprop="dateCreated datePublished" datetime="2018-12-06T23:17:49-05:00">2018-12-06</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>I attended the tech talk at spotify tonight, learned a lot of good stuff, many thanks to Spotify to origanize such great event and great representation from Ramino Yon.</p>
+<p>Main takeaways, six challenges when doing machine learning infrastructure and some pointers to existed papers/blogs about ML infrastructures.</p>
+<h1 id="Challenges"><a href="#Challenges" class="headerlink" title="Challenges"></a>Challenges</h1><h2 id="1-Rely-on-data-standards"><a href="#1-Rely-on-data-standards" class="headerlink" title="1. Rely on data standards"></a>1. Rely on data standards</h2><p>The data standards here means, there should be a universal data structure to hold machine learning data(e.g. categorical/numerical/ features). One good example is Tensorflow’s <a href="https://www.tensorflow.org/tutorials/load_data/tf-records" target="_blank" rel="noopener"><code>tf.example</code></a>.</p>
+<p>One big benefit from data standards is to allow data flow from components to components easily. In a machine learning system, after collecting the data, the first step usually is data preprocessing(Spotify has a open source implementation called <a href="https://github.com/spotify/featran" target="_blank" rel="noopener">featran</a>). After that we can use different machine learning algorithms. With data standards, we can easily drop a new component in the pipeline without many code changes.</p>
+<h2 id="2-Share-logic-amp-weights"><a href="#2-Share-logic-amp-weights" class="headerlink" title="2. Share logic &amp; weights"></a>2. Share logic &amp; weights</h2><p>The weights here means two parts:</p>
+<p><script type="math/tex">\theta_{feature\ processing}</script> means the parameters ironed in feature transformation component, for example we need to record the average value of certain column to do the standarization $X’ = \frac{X-\mu}{\delta}$<br>$\theta_{model}$ means the parameters learned in a machine learning model, like weights and bias in a logistic regression.</p>
+<p>The major takeaway is, we should seal feature processing step and model prediction in the same container, so that we won’t have wrong wires in components.</p>
+<p>That actually triggered my memory regarding a production error we made, we accidentally merged a PR that replaced the tokenizer and we didn’t record the tokenizer version in model, that causes a lot of complaints from our customer. After that accident, we started to add one more entry in the model config file, to remember the tokenizer version.</p>
+<p>Since the presentation mainly talked about structured data, it is a little bit different from unstructured data such as text, NLP depends on other primitive NLP models to extract features(tokenization, entities, POS, syntax, etc.), that will lead you to a dependcy hell.</p>
+<p>And one more difference I am thinking between ML infrasturce presented tonight and in our daily jobs. The data for Spotify’s machine learning models usually are expected(recommending music, display ads), while what we are doing is Machine Learning as a Service, the challenge comes from the diversity of the data. The data can be from any domains and you have to use one single algorithm to fit them otherwise it would be hard to scale out your service.</p>
+<h2 id="3-Share-decoration-logic"><a href="#3-Share-decoration-logic" class="headerlink" title="3. Share decoration logic"></a>3. Share decoration logic</h2><p>This is inspired by Google’s blog, see <a href="#Pointers">Pointers</a> 1<br>After a model is online, we continue to collect more and more data. </p>
+<p>In the meanwhile, we need to get data from different data pool and join/compose them together before sending them to a machine learning system(include feature processing and model prediction). And we also want to retrain the model once we get more and more data, a good trick is log the decorated/joined data in runtime in a database, once we need to retrain the model, we don’t need to redo the join/compose step again.</p>
+<h2 id="4-Validate-your-data"><a href="#4-Validate-your-data" class="headerlink" title="4. Validate your data"></a>4. Validate your data</h2><p>When buliding the machine learning model, we used to make some assumptions(e.g. age cannot be negative), this is easy to gurantee in training step, but we need to guard the input when serving the model, propably trigger some alerts when too many outliers are detected.</p>
+<p>Some off-the-shelf implemention is Tensorflow’s <a href="https://www.tensorflow.org/tfx/data_validation/get_started" target="_blank" rel="noopener"><code>TFDV</code></a>, which <code>compute the statistics</code>, <code>infer a schema</code>, <code>detect data anomalies</code> for given dataset.</p>
+<p>By validating your newly collected data against historical/training data, you can also catch the data shifting.</p>
+<h2 id="5-Use-“stateless”-containers"><a href="#5-Use-“stateless”-containers" class="headerlink" title="5. Use “stateless” containers"></a>5. Use “stateless” containers</h2><p>It is hard to have completely “stateless” containers. By making it as “stateless” as possible, on-call engineers can easily revert the machine learning model to previous version once some bugs happened in current version. Another benefits is make the new model deployment easier.</p>
+<p>Don’t include any customized logic inside the container, it would significantly decrease the maintainability.</p>
+<h2 id="6-Leverage-CI-CD-for-ML"><a href="#6-Leverage-CI-CD-for-ML" class="headerlink" title="6. Leverage CI/CD for ML"></a>6. Leverage CI/CD for ML</h2><p>CI/CD drastically change the way that software development. Other than the traditional benefits, CI/CD in machine leanring systems is more complex, some takeaways:<br> a. Use it a lot, both offline and online<br> b. Use low user impact environment</p>
+<p>There is also an interesting way in Spotify to test machine learning model, they called it <code>Shadow</code>. Let’s say we have model A in prodcution and model B is a newer version and ready to deploy.</p>
+<p>After deploy model B and before route all traffic to B, mirror all traffic that to A, and send them to B. User will only receive predctions from model A, while the engineers should monitor the status of model B, it is more like a load testing in machine learning world.</p>
+<h1 id="Pointers"><a href="#Pointers" class="headerlink" title="Pointers:"></a>Pointers:</h1><h3 id="1-Hidden-Technical-Debt-in-Machine-Learning-Systems"><a href="#1-Hidden-Technical-Debt-in-Machine-Learning-Systems" class="headerlink" title="1. Hidden Technical Debt in Machine Learning Systems"></a>1. <a href="https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf" target="_blank" rel="noopener">Hidden Technical Debt in Machine Learning Systems</a></h3><h3 id="2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering"><a href="#2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering" class="headerlink" title="2. Rules of Machine Learning: Best Practices for ML Engineering"></a>2. <a href="https://developers.google.com/machine-learning/guides/rules-of-ml/" target="_blank" rel="noopener">Rules of Machine Learning: Best Practices for ML Engineering</a></h3><h3 id="3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems"><a href="#3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems" class="headerlink" title="3. What’s your ML test score? A rubric for ML production systems"></a>3. <a href="https://storage.googleapis.com/pub-tools-public-publication-data/pdf/45742.pdf" target="_blank" rel="noopener">What’s your ML test score? A rubric for ML production systems</a></h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-11-28-little-things-that-made-my-day/" rel="next" title="Little things that made my day">
+                <i class="fa fa-chevron-left"></i> Little things that made my day
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Ruijian Wang</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Challenges"><span class="nav-number">1.</span> <span class="nav-text">Challenges</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Rely-on-data-standards"><span class="nav-number">1.1.</span> <span class="nav-text">1. Rely on data standards</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Share-logic-amp-weights"><span class="nav-number">1.2.</span> <span class="nav-text">2. Share logic &amp; weights</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Share-decoration-logic"><span class="nav-number">1.3.</span> <span class="nav-text">3. Share decoration logic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Validate-your-data"><span class="nav-number">1.4.</span> <span class="nav-text">4. Validate your data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Use-“stateless”-containers"><span class="nav-number">1.5.</span> <span class="nav-text">5. Use “stateless” containers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Leverage-CI-CD-for-ML"><span class="nav-number">1.6.</span> <span class="nav-text">6. Leverage CI/CD for ML</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pointers"><span class="nav-number">2.</span> <span class="nav-text">Pointers:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Hidden-Technical-Debt-in-Machine-Learning-Systems"><span class="nav-number">2.0.1.</span> <span class="nav-text">1. Hidden Technical Debt in Machine Learning Systems</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Rules-of-Machine-Learning-Best-Practices-for-ML-Engineering"><span class="nav-number">2.0.2.</span> <span class="nav-text">2. Rules of Machine Learning: Best Practices for ML Engineering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-What’s-your-ML-test-score-A-rubric-for-ML-production-systems"><span class="nav-number">2.0.3.</span> <span class="nav-text">3. What’s your ML test score? A rubric for ML production systems</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ruijian Wang</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/mathjax@2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
