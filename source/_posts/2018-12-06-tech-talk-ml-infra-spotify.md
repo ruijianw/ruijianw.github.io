@@ -12,6 +12,7 @@ Main takeaways, six challenges when doing machine learning infrastructure and so
 
 #Challenges
 ## 1. Rely on data standards
+<!--more-->
 The data standards here means, there should be a universal data structure to hold machine learning data(e.g. categorical/numerical/ features). One good example is Tensorflow's [`tf.example`](https://www.tensorflow.org/tutorials/load_data/tf-records).
 
 One big benefit from data standards is to allow data flow from components to components easily. In a machine learning system, after collecting the data, the first step usually is data preprocessing(Spotify has a open source implementation called [featran](https://github.com/spotify/featran)). After that we can use different machine learning algorithms. With data standards, we can easily drop a new component in the pipeline without many code changes.

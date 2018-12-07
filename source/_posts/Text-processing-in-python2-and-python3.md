@@ -16,7 +16,7 @@ a = 01100001
 b = 01100010
 c = 01100011
 ```
-
+<!--more-->
 The problem with `ASCII`'s 8 digit is that there are only 256 combinations, of course there are some other encodings, but that is beyond this blog.
 
 In a nutshell, a code point is an integer, represents a character.
