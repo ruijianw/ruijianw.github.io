@@ -13,6 +13,7 @@ tags:
 3. It is not the `.gitignore` file issue, excluded by `git status --ignored`.
 4. The cloned github folder was on Google Drive.
 
+<!--more-->
 ### Solution:
 Move the folder out of the Google Drive, everything works.
 
