@@ -17,7 +17,7 @@ First of all, the definition of management is concise, it differenciates `leader
 
 >Management is not a promotion, it is a lateral move for people who want to get work done through and grow and develop others
 
-
+<!--more-->
 The refreshing definition is also impressive, you can find a pretty good article about this in [1] of the [Resources](##Resources)
 ## Strength v.s. Weakness
 1. Strength is not something that you are **good** at, A strength is an activity:
