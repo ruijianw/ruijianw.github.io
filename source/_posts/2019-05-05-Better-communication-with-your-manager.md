@@ -20,13 +20,12 @@ First of all, the definition of management is concise, it differenciates `leader
 <!--more-->
 The refreshing definition is also impressive, you can find a pretty good article about this in [1] of the [Resources](##Resources)
 ## Strength v.s. Weakness
-1. Strength is not something that you are **good** at, A strength is an activity:
+* Strength is not something that you are **good** at, A strength is an activity:
   * that strengths you. 
-  * that you loo forward to doing.
+  * that you look forward to doing.
   * that leaves you energized, rather than depleted
 
-  
-2. Similar to strength, weakness is not something that you are **bad** at neither, but something that we hate doing. 
+* Similar to strength, weakness is not something that you are **bad** at neither, but something that we hate doing. 
 
 ## Situational leadership
 
