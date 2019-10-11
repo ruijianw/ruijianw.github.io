@@ -1,7 +1,6 @@
-91415d812823a9518815c45b7ceb596b8d2094ff		branch 'master' of https://github.com/theme-next/hexo-theme-next
-a1e451cc0ff564c94071d82dd24f6ae73d9e4eff	not-for-merge	branch 'dev' of https://github.com/theme-next/hexo-theme-next
-770f34d869929191bf0e6d7d5864807ffe1c07d2	not-for-merge	branch 'i18n' of https://github.com/theme-next/hexo-theme-next
-91415d812823a9518815c45b7ceb596b8d2094ff	not-for-merge	tag 'v6.5.0' of https://github.com/theme-next/hexo-theme-next
-6ab2480e9f0a4cae0b390fd50f33535938dd6163	not-for-merge	tag 'v6.4.0' of https://github.com/theme-next/hexo-theme-next
-b5aa49d0317fa935f272eaa448552c1428cb8902	not-for-merge	tag 'v6.4.1' of https://github.com/theme-next/hexo-theme-next
-a54ec63c7ba4d31437895549558ad611fb8a097b	not-for-merge	tag 'v6.4.2' of https://github.com/theme-next/hexo-theme-next
+38ea05eab68e76c202a07db7cb3cd7eff4eb9380		branch 'master' of https://github.com/theme-next/hexo-theme-next
+28a99eb4bc748b016f99da941dcbc074e03dcf3e	not-for-merge	branch 'can' of https://github.com/theme-next/hexo-theme-next
+a87fbf4fefa99661a7e66cdabbb91692ce14256c	not-for-merge	branch 'disqus' of https://github.com/theme-next/hexo-theme-next
+c9f2ea83d2d71c5e1c75f5084665064aa25a4b7f	not-for-merge	branch 'id' of https://github.com/theme-next/hexo-theme-next
+7214dc12dec67dbf0e938afc2386f6c7561bc80d	not-for-merge	branch 'njk' of https://github.com/theme-next/hexo-theme-next
+a139e40c3e05ccc5d13941af24253ffee09ab64d	not-for-merge	branch 'script' of https://github.com/theme-next/hexo-theme-next
