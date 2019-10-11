@@ -752,7 +752,7 @@ baidu_analytics: # <app_id>
 growingio_analytics: # <project_id>
 
 # Google Analytics
-google_analytics:
+google_analytics: UA-149873543-1
   tracking_id: # <app_id>
   localhost_ignored: true
   # By default, NexT will load an external gtag.js script on your site.
