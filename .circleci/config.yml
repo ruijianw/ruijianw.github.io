@@ -38,9 +38,6 @@ jobs:
             sudo npm install hexo-cli -g
             npm install hexo --save
             npm install hexo-deployer-git --save
-            npm uninstall hexo-renderer-marked --save
-            npm install hexo-renderer-pandoc --save
-            npm install hexo-renderer-kramed --save
             npm install
 
       - save_cache:
