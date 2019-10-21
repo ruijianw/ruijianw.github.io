@@ -396,6 +396,18 @@
               <time title="Created: 2019-05-01 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-01T00:00:00-04:00">2019-05-01</time>
             </span>
           
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-21 00:00:00" itemprop="dateModified" datetime="2019-10-21T00:00:00-04:00">2019-10-21</time>
+              </span>
+            
+          
 
           
 
@@ -408,11 +420,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Git-cannot-see-new-files"><a href="#Git-cannot-see-new-files" class="headerlink" title="Git cannot see new files"></a>Git cannot see new files</h1><h3 id="Symptom"><a href="#Symptom" class="headerlink" title="Symptom:"></a>Symptom:</h3><ol>
+          <h1 id="Jupyterlab-loads-too-slow"><a href="#Jupyterlab-loads-too-slow" class="headerlink" title="Jupyterlab loads too slow"></a>Jupyterlab loads too slow</h1><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>I setup my jupyter server on an EC2 instance and open it with my laptop browser, but it is getting slower and slower when I try to reopen the window.</p>
+<p>I looked at the Chrome’s Dev tools, it turns out there is a <code>js</code> file 36MB size, that means each time you need to download 36MB js file to open a jupyter lab page.</p>
+<h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p>Build the jupyter lab with following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build --minimize=False --dev-build=False</span><br></pre></td></tr></table></figure>
+<h1 id="Git-cannot-see-new-files"><a href="#Git-cannot-see-new-files" class="headerlink" title="Git cannot see new files"></a>Git cannot see new files</h1><h3 id="Description-1"><a href="#Description-1" class="headerlink" title="Description:"></a>Description:</h3><ol>
 <li>New files cannot be found under <code>git status</code></li>
 <li>There is a weird icon file, refer to <a href="https://superuser.com/questions/298785/icon-file-on-os-x-desktop" target="_blank" rel="noopener">this link</a></li>
 <li>It is not the <code>.gitignore</code> file issue, excluded by <code>git status --ignored</code>.</li>
-<li>The cloned github folder was on Google Drive.</li>
+<li>The cloned github folder was on <strong>Google Drive</strong> synchronization folder.</li>
 </ol>
           <!--noindex-->
           
