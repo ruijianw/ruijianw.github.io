@@ -271,14 +271,14 @@
 <p>I looked at the Chrome’s Dev tools, it turns out there is a <code>js</code> file 36MB size, that means each time you need to download 36MB js file to open a jupyter lab page.</p>
 <h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p>Build the jupyter lab with following command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build --minimize=False --dev-build=False</span><br></pre></td></tr></table></figure>
-<h1 id="Git-cannot-see-new-files"><a href="#Git-cannot-see-new-files" class="headerlink" title="Git cannot see new files"></a>Git cannot see new files</h1><h3 id="Description-1"><a href="#Description-1" class="headerlink" title="Description:"></a>Description:</h3><ol>
+<a id="more"></a>
+<h1 id="Git-cannot-see-new-files"><a href="#Git-cannot-see-new-files" class="headerlink" title="Git cannot see new files"></a>Git cannot see new files</h1><h2 id="Description-1"><a href="#Description-1" class="headerlink" title="Description:"></a>Description:</h2><ol>
 <li>New files cannot be found under <code>git status</code></li>
 <li>There is a weird icon file, refer to <a href="https://superuser.com/questions/298785/icon-file-on-os-x-desktop" target="_blank" rel="noopener">this link</a></li>
 <li>It is not the <code>.gitignore</code> file issue, excluded by <code>git status --ignored</code>.</li>
 <li>The cloned github folder was on <strong>Google Drive</strong> synchronization folder.</li>
 </ol>
-<a id="more"></a>
-<h3 id="Solution-1"><a href="#Solution-1" class="headerlink" title="Solution:"></a>Solution:</h3><p>Move the folder out of the Google Drive, everything works.</p>
+<h2 id="Solution-1"><a href="#Solution-1" class="headerlink" title="Solution:"></a>Solution:</h2><p>Move the folder out of the Google Drive, everything works.</p>
 <p>Although the root cause is not found, my guess would be that some indexing of Google Drive makes the git misbehaving.</p>
 <hr>
 
@@ -355,7 +355,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Jupyterlab-loads-too-slow"><span class="nav-number">1.</span> <span class="nav-text">Jupyterlab loads too slow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">1.1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Solution"><span class="nav-number">1.2.</span> <span class="nav-text">Solution</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-cannot-see-new-files"><span class="nav-number">2.</span> <span class="nav-text">Git cannot see new files</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Description-1"><span class="nav-number">2.0.1.</span> <span class="nav-text">Description:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Solution-1"><span class="nav-number">2.0.2.</span> <span class="nav-text">Solution:</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Jupyterlab-loads-too-slow"><span class="nav-number">1.</span> <span class="nav-text">Jupyterlab loads too slow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description"><span class="nav-number">1.1.</span> <span class="nav-text">Description</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Solution"><span class="nav-number">1.2.</span> <span class="nav-text">Solution</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-cannot-see-new-files"><span class="nav-number">2.</span> <span class="nav-text">Git cannot see new files</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Description-1"><span class="nav-number">2.1.</span> <span class="nav-text">Description:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Solution-1"><span class="nav-number">2.2.</span> <span class="nav-text">Solution:</span></a></li></ol></li></ol></div>
         
       </div>
       <!--/noindex-->

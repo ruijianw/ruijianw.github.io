@@ -424,12 +424,6 @@
 <p>I looked at the Chrome’s Dev tools, it turns out there is a <code>js</code> file 36MB size, that means each time you need to download 36MB js file to open a jupyter lab page.</p>
 <h2 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h2><p>Build the jupyter lab with following command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jupyter lab build --minimize=False --dev-build=False</span><br></pre></td></tr></table></figure>
-<h1 id="Git-cannot-see-new-files"><a href="#Git-cannot-see-new-files" class="headerlink" title="Git cannot see new files"></a>Git cannot see new files</h1><h3 id="Description-1"><a href="#Description-1" class="headerlink" title="Description:"></a>Description:</h3><ol>
-<li>New files cannot be found under <code>git status</code></li>
-<li>There is a weird icon file, refer to <a href="https://superuser.com/questions/298785/icon-file-on-os-x-desktop" target="_blank" rel="noopener">this link</a></li>
-<li>It is not the <code>.gitignore</code> file issue, excluded by <code>git status --ignored</code>.</li>
-<li>The cloned github folder was on <strong>Google Drive</strong> synchronization folder.</li>
-</ol>
           <!--noindex-->
           
             <div class="post-button">
